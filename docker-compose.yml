@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  csv-backend:
+    restart: unless-stopped
+    build:
+      dockerfile: Dockerfile
+      context: "./csv-backend"
+    depends_on:
+      - csv-frontend
+    volumes:
+      - /app/node_modules
+      - ./csv-backend:/
+    ports:
+      - 4001:4001
+
+  csv-frontend:
+    stdin_open: true
+    ports:
+      - 3000:3000
+    build:
+      dockerfile: Dockerfile
+      context: "./csv-frontend"
+    volumes:
+      - /app/node_modules
+      - ./csv-backend:/
+
+  db:
+    image: mongo:4.0-xenial
+    restart: unless-stopped
+    ports:
+      - 8000:8080    
